@@ -1,0 +1,5 @@
+\beamer@sectionintoc {1}{Public key encryption schemes}{3}{0}{1}
+\beamer@sectionintoc {2}{Homomorphic encryption schemes}{3}{0}{2}
+\beamer@sectionintoc {3}{CGS encryption scheme}{3}{0}{3}
+\beamer@sectionintoc {4}{Boosting technique for linearly homomorphic encryption scheme}{3}{0}{4}
+\beamer@sectionintoc {5}{Concluding remarks}{3}{0}{5}

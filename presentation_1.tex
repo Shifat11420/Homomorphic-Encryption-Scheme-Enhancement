@@ -1,0 +1,865 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer Presentation
+% LaTeX Template
+% Version 1.0 (10/11/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass{beamer}
+
+\mode<presentation> {
+
+% The Beamer class comes with a number of default slide themes
+% which change the colors and layouts of slides. Below this is a list
+% of all the themes, uncomment each in turn to see what they look like.
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+%\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+% As well as themes, the Beamer class has a number of color themes
+% for any slide theme. Uncomment each of these in turn to see how it
+% changes the colors of your current slide theme.
+
+%\usecolortheme{albatross}
+\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title[Partially HE schemes]{A Study on Partially Homomorphic Encryption Schemes} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author[Shifat P. Mithila]{Shifat P. Mithila\\ Advisor: Dr. Koray Karabina} % Your name
+
+\institute[FAU] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+{
+Florida Atlantic University \\ % Your institution for the title page
+\medskip
+\textit{smithila2014@fau.com} % Your email address
+}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+\begin{frame}
+\frametitle{Overview} % Table of contents slide, comment this block out to remove it
+\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+
+%------------------------------------------------
+\section{Public key encryption schemes} % Sections can be created in order to organize your presentation into discrete blocks, all sections and subsections are automatically printed in the table of contents as an overview of the talk
+
+
+%\subsection{Subsection Example} % A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
+
+\section{Homomorphic encryption schemes}
+\section{CGS encryption scheme}
+\section{Boosting technique for linearly homomorphic encryption scheme}
+\section{Concluding remarks}
+
+%------------------------------------------------
+
+\begin{frame}[t]
+\frametitle{Public key encryption scheme}
+%\section{Motivation}
+\begin{itemize}
+
+\item Symmetric key cryptography:\\
+$\rightarrow$ one single key used.
+\vspace*{2mm}
+\item Asymmetric/ Public key cryptography:\\
+$\rightarrow$ a pair of keys $(pk,sk)$ is used.
+
+\begin{figure}[t]
+\includegraphics[width=6cm]{public}
+\centering
+% \textit{http://cs110.wellesley.edu/reading/cryptography-files/handout.html}\par\medskip
+\end{figure}
+
+\end{itemize}
+\end{frame}
+
+%-------------------------------------------------------
+
+\begin{frame}[t]
+\frametitle{Short history of public key encryption}
+$\rightarrow$ Introduced in 1976, by Diffie and Hellman.\\
+$\rightarrow$ Diffie and Hellman proposed ``key-exchange protocol".\\
+\vspace*{5mm}
+$\textbf{RSA scheme:}$ Ron Rivest, Adi Shamir and Leonard Adleman, in 1978
+\vspace*{3mm}
+\begin{itemize}
+\item  First public key cryptosystem.
+\vspace*{2mm}
+\item  Based on integer factorization problem.
+\vspace*{2mm}
+\item  Security depends on: Factoring $N$, computing $\phi(N)$ or computing $d$.
+\vspace*{2mm}
+\item  Widely used in secure data transmission, mostly in ``key agreement" and ``digital signature". 
+
+\end{itemize}
+\end{frame}
+
+%-------------------------------------------------------
+\begin{frame}[t]
+\frametitle{ElGamal encryption scheme: Construction}
+$\textbf{ElGamal scheme:}$  Taher ElGamal, in 1985
+\vspace*{2mm}
+\begin{itemize}
+\item  Based on Diffie-Hellman key exchange.
+\vspace*{2mm}
+\item Implemented on hybrid cryptosystems, PGP, free GNU privacy guard software etc.
+\end{itemize}
+\vspace*{2mm}
+\begin{block}{$\mathsf{KeyGen:}$}
+\begin{itemize}
+\item Input is $(\mathbb{G},q,g)$. 
+\item Choose a random $a\longleftarrow [1,q-1]$ 
+\item Compute $g^a$\item Outputs are the public key is $\langle\mathbb{G},q,g,g^a\rangle$ and the private key is $\langle\mathbb{G},q,g,a\rangle$
+\end{itemize} 
+\end{block}
+\end{frame}
+%-------------------------------------------------------
+\begin{frame}[t]
+\frametitle{ElGamal encryption scheme: Construction}
+
+\begin{block}{$\mathsf{Enc:}$}
+\begin{itemize}
+\item Input a public key $pk=\langle\mathbb{G},q,g,g^a\rangle$ and a message $m \in \mathbb{G}$
+\item Choose a random $r \longleftarrow [1,q]$
+\item Output the ciphertext $(c_1,c_2):=(g^r,(g^a)^r \cdot m)$\\
+\end{itemize} 
+\end{block}
+\vspace*{5mm}
+\begin{block}{$\mathsf{Dec:}$}
+\begin{itemize}
+\item Input a private key $sk=\langle\mathbb{G},q,g,a \rangle$ and a ciphertext $(c_1,c_2)$
+\item Output the message $m:=c_2/{c_1}^a$
+\end{itemize} 
+\end{block}
+\end{frame}
+
+%-------------------------------------------------------
+
+\begin{frame}[t]
+\frametitle{Security of ElGamal scheme}
+
+\begin{itemize}
+\item  Breaking ElGamal $\equiv$ Computational Diffie-Hellman (CDH) problem.\\
+\vspace*{1mm}
+($\textbf{CDH:}$ From given $(g,g^a,g^b)$, can we find $g^{ab}$ having no knowledge about $a$ and $b$?).
+\vspace*{5mm}
+\item   Semantic security of the ElGamal $\equiv$ Decisional Diffie-Hellman (DDH) problem.\\
+\vspace*{1mm} 
+($\textbf{DDH:}$ Can we distinguish between the given tuples $(g,g^a,g^b,g^{ab})$ and $(g,g^a,g^b,g^{r})$, having no knowledge about $a$ and $b$?).
+\end{itemize}
+
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}[t]
+\frametitle{Effieciency of ElGamal scheme}
+
+\begin{table}
+\centering
+\caption{$\textbf{Efficiency of ElGamal Encryption Scheme}$}\label{table:Eff. ElGamal}
+\begin{tabular}{ |p{4cm}||p{6cm}|  }
+ \hline
+ \hline
+Functions & Operations (we denote multiplication by M, pseudo random number generation by PRNG, scalar multiplication by SM, division by D, subtraction by S, addition by A and exponentiation by E)\\
+ \hline\hline
+ ElGamal Key Generation   & 1PRNG + 1E \\
+ \hline
+ ElGamal Encrytion   & 1PRNG + 2E + 1M \\
+ \hline
+ ElGamal Decrytion   & 1E + 1D  \\
+  \hline
+\end{tabular}
+\end{table}
+\end{frame}
+
+
+%------------------------------------------------
+
+\begin{frame}[t]
+\frametitle{Homomorphic encryption scheme}
+
+\begin{itemize}
+
+\item  Certain computations (addition and multiplication) can be performed on the encrypted plaintexts/ ciphertexts.   
+\vspace*{3mm}
+\item   Generates a ciphertext such that when decrypted, gives same result from the similar operations performed on the plaintexts.
+\vspace*{3mm}
+\item Outsourcing computations.
+\vspace*{3mm}
+\item Implemented in cloud computing, electronic voting protocol, watermarking and fingerprinting, secure multiparty computations etc.
+\vspace*{3mm}
+\item Message space $\mathcal{M}=(\mathbb{Z},+,\cdot)$
+
+\end{itemize}
+\end{frame}
+
+
+%-------------------------------------------------------
+\begin{frame}[t]
+\frametitle{Properties of homomorphic encryption scheme}
+
+\begin{block}{$\textbf{Additively homomorphic:}$}
+\begin{align*}
+\mathsf{Enc}(m_1+m_2)=\mathsf{Enc}(m_1) \boxplus \mathsf{Enc}(m_2)
+\end{align*}
+\end{block}
+
+\begin{block}{$\textbf{Multiplicatively homomorphic:}$}
+\begin{align*}
+\mathsf{Enc}(m_1\cdot m_2)=\mathsf{Enc}(m_1) \boxdot \mathsf{Enc}(m_2)
+\end{align*}
+\end{block}
+
+\begin{block}{$\textbf{Scaler multiplication property:}$}
+\begin{align*}
+\mathsf{Enc}(s\cdot m)&=\mathsf{Enc}(m+m+\cdots+m)\\&= \mathsf{Enc}(m)\boxplus \mathsf{Enc}(m)\boxplus \cdots \boxplus \mathsf{Enc}(m)\\& =s \boxdot \mathsf{Enc}(m)
+\end{align*}
+\end{block}
+\end{frame}
+
+%-------------------------------------------------------
+
+\begin{frame}[t]
+\frametitle{Different types of homomorphic scheme}
+$\textbf{Partially homomorphic scheme:}$ 
+\begin{itemize}
+\item  Allows only one homomorphic property (addition or multiplication but not both). 
+\end{itemize}
+\vspace*{3mm}
+$\textbf{Fully homomorphic scheme:}$ 
+\begin{itemize}
+\item  Allows both the homomorphic properties (arbitrary number of additions and multiplications). 
+\end{itemize}
+\vspace*{3mm}
+$\textbf{Somewhat homomorphic scheme:}$ 
+\begin{itemize}
+\item  More than partilly homomorphic. 
+\item   But Not fully homomorphic. 
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}[t]
+\frametitle{Examples of homomorphic schemes}
+
+\begin{itemize}
+\item  $\textbf{RSA is partially (multiplicative) homomorphic}$ 
+%${m_1}^e\cdot{m_2}^e={m_1\cdotm_2}^e \mod n$ 
+\vspace*{3mm}
+\item $\textbf{ElGamal is partially (multiplicative) homomorphic}$ 
+\begin{align*}
+E(m_1)\boxdot E(m_2) &=(g^{r_1},(g^a)^{r_1} \cdot {m_1})\boxdot (g^{r_2},(g^a)^{r_2} \cdot {m_2})\\ &=(g^{r_1+r_2},(g^a)^{r_1+r_2} \cdot {m_1\cdot m_2})\\ &=(g^{r},(g^a)^{r} \cdot {m_1\cdot m_2})\\ &=E(m_1\cdot m_2)
+\end{align*}
+ for some $r=r_1+r_2$
+\end{itemize}
+\end{frame}
+
+
+%------------------------------------------------
+
+\begin{frame}[t]
+\frametitle{CGS homomorphic encryption scheme}
+
+\begin{itemize}
+\item  Cramer, Genarro and Schoenmakers, in 1997.
+\vspace*{3mm}
+\item Presented as a variant on the ElGamal scheme.
+\vspace*{3mm}   
+\item   Consists of four faces: key generation, encryption, evaluation functions and decryption.\\ $\mathsf{CGS=(KeyGen_{CGS} , Enc_{CGS} , Dec_{CGS} , Eval_{CGS})}$
+\vspace*{3mm}
+\item Linearly homomorphic scheme.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[t]
+\frametitle{ CGS encryption scheme: Construction}
+\begin{block}{$\mathsf{KeyGen_{CGS}:}$}
+\begin{itemize}
+\item Inputs are security parameter $1^n$, group $\mathbb{G}$ and element $g \in \mathbb{G}$. 
+\item Choose a random $a \longleftarrow [1,q-1]$
+\item Compute $g^a$ 
+\item Outputs are the private key $sk=a$, public key $pk=g^a$
+\end{itemize} 
+\end{block}
+\begin{block}{$\mathsf{Enc_{CGS}:}$}
+\begin{itemize}
+\item Inputs are public key $G=g^a$, message $m\in [-B,B]$
+\item Choose a random number $r\in_R [1,q-1]$   
+\vspace*{2mm}
+\item If {$r$ is prime} then\\
+  compute  $x := g^r$\\
+  compute $y := G^r*G^m$
+  \vspace*{2mm}
+\item Output the ciphertext $c=[x,y]$\\
+\end{itemize} 
+\end{block}
+\end{frame}
+
+
+%-------------------------------------------------------
+\begin{frame}[t]
+\frametitle{CGS encryption scheme: Construction}
+
+
+
+\begin{block}{$\mathsf{Dec_{CGS}:}$}
+\begin{itemize}
+\item Inputs are secret key $a$, the ciphertext $c=[x,y]$
+\item Compute  $k_1 := x^a$
+\item Compute $k_2 := y/{k_1}$              
+\item For $i \in [-B,B]$\\
+ If {$G^i==k_2$} then $m=i$\\
+ Otherwise return ``error"
+\item Output the message $m$
+\end{itemize} 
+\end{block}
+\end{frame}
+
+%-------------------------------------------------------
+\begin{frame}
+\frametitle{CGS encryption scheme: Homomorphic properties $(\mathsf{Eval_{CGS}})$}
+
+\begin{block}{Addition ($Add_{CGS}$)}
+\begin{itemize}
+\item Inputs are the ciphertext pair $c_1=\mathsf{Enc_{CGS}}(m_1)=[x_1,y_1]$ and $c_2=\mathsf{Enc_{CGS}}(m_2)=[x_2,y_2]$
+\item Compute  $x := x_1 \cdot x_2$
+\item Compute  $y := y_1 \cdot y_2$ 
+\item Output the ciphertext $c=c_1 \boxplus c_2=[x,y]=\mathsf{Enc_{CGS}}(m_1+m_2)$
+\end{itemize} 
+\end{block}
+
+\begin{block}{Scaler multiplication ($SMult_{CGS}$)}
+\begin{itemize}
+\item Inputs are the ciphertext $c_1=[x_1,y_1]$ and a scaler $s \in \mathcal{M}$
+\item Compute $x := x_1^s$
+\item Compute $y := y_1^s$
+\item Output is the ciphertext $s \boxdot c_1=[x,y]=\mathsf{Enc_{CGS}}(s\cdot m_1)$
+\end{itemize} 
+\end{block}
+\end{frame}
+
+%-------------------------------------------------------
+\begin{frame}[t]
+\frametitle{CGS encryption scheme: Homomorphic properties $(\mathsf{Eval_{CGS}})$}
+
+\begin{block}{Linear Combination ($LinComb_{CGS}$)}
+\begin{itemize}
+\item Inputs are a pair of sets $(s,c)$ where $s=[s_1,s_2......]$ and $c=[c_1,c_2,....]$ where each $c_i=[x_i,y_i]$
+\item Define $k:= \#s$
+\item Choose $x := 1$
+\item Choose $y := 1$
+\item For {i=1 to k}\\
+       Compute $ x :=x.x_i^{s_i} $\\
+       Compute $ y :=y.y_i^{s_i} $
+\item Output is the ciphertext $c=[x,y]=\mathsf{Enc_{CGS}}(\sum_i s_i \cdot m_i)$
+\end{itemize} 
+\end{block}
+\end{frame}
+
+%-------------------------------------------------------
+
+\begin{frame}[t]
+\frametitle{Security of CGS scheme}
+
+\begin{itemize}
+\item Discrete logarithm problem is required to be intractable.
+\vspace*{3mm}
+\item  Computational Diffie-Hellman problem has to be intractable.
+\vspace*{3mm}
+\item   Semantic security of the CGS encryption scheme requires the
+intractability of the decisional Diffie-Hellman(DDH) problem.
+\vspace*{3mm}
+\item Not known whether the security of ElGamal and CGS schemes are equivalent or not.
+
+\end{itemize}
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}[t]
+\frametitle{Efficiency of CGS scheme}
+
+\begin{table}
+\centering
+\caption{$\textbf{Efficiency of CGS Encryption Scheme}$}\label{table:Eff. CGS}
+\begin{tabular}{ |p{4cm}||p{6cm}|}
+ \hline
+ \hline
+Functions & Operations \\
+ \hline\hline
+ CGS Key generation       & 1 PRNG + 1E \\
+ \hline
+ CGS Encrytion            & 1 PRPNG + 3E + 1M \\
+ \hline
+ CGS Decrytion            & 2E + 1D \\
+ \hline
+ CGS Addition             & 2M \\
+ \hline
+ CGS Scalar multiplication       & 2E \\
+ \hline
+ CGS Linear combination ($k=\#s$)   & 2k E + 2k M \\
+  \hline
+\end{tabular}
+\end{table}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}[t]
+\frametitle{Boosting linearly homomorphic encryption scheme}
+
+\begin{itemize}
+\item  Dario Catalano and Dario Fiore, 2015.
+\vspace*{3mm}
+%\item  Boost a linearly homomorphic encryption scheme to enable degree 2 polynomial computations on encrypted messages \\   
+\item  Converts a public-space LHE scheme $\mathsf{\widehat{HE}}=(\mathsf{\widehat{KeyGen}},\mathsf{\widehat{\mathsf{Enc}}},\mathsf{\widehat{Eval}},\mathsf{\widehat{Dec}})$ to a HE scheme supporting one multiplication, denoted by $\mathsf{HE_B}=(\mathsf{KeyGen_B,Enc_B,Eval_B,Dec_B})$.
+\vspace*{3mm}
+\item  The message space $\rightarrow$ public ring.
+\vspace*{3mm}
+\item  Claimed to work on virtually all the existing number theoretic LHE such as Paillier, ElGamal or Goldwasser-Micalli.
+
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[t]
+\frametitle{ Boosting LHE scheme: Construction}
+\begin{block}{$\mathsf{KeyGen_B:}$}
+ $\widehat{\mathsf{KeyGen}}=\mathsf{KeyGen_B}$. 
+\end{block}
+\vspace*{3mm}
+\begin{block}{$\mathsf{Enc_{B}:}$}
+\begin{itemize}
+\item Inputs are public key $pk=G$, message $m$
+\item Choose a random number $b\in_R \mathcal{M}$
+\item Compute $u = m-b$
+\item Compute  $\beta =\mathsf{\widehat{\mathsf{Enc}}}(b)$ 
+\item Output the ciphertext $c=[u,\beta]$
+\end{itemize} 
+\end{block}
+\end{frame}
+
+
+%-------------------------------------------------------
+\begin{frame}[t]
+\frametitle{Boosting LHE scheme: Construction}
+$\textbf{Evaluation functions for the Boosted-LHE scheme}\,\,(\mathsf{Eval_B})$
+\vspace*{2mm}
+\begin{itemize}
+\item Ciphertexts are of two levels: \\$\rightarrow$ \textbf{Level 1 ciphertext} : encode ``fresh" messages/ linear combinations of ``fresh" messages.\\
+\vspace*{1mm}
+$\rightarrow$ \textbf{Level 2 ciphertexts} : ``multiplied" level 1 ciphertexts.
+\vspace*{5mm}
+\item Five different evaluation functions:\\
+\vspace*{2mm}
+$\rightarrow$ $\mathbf{\mathsf{Add_1}}$: Addition between two level 1 ciphertexts.\\
+\vspace*{1mm}
+$\rightarrow$ $\mathbf{\mathsf{Mult_1}}$: Multiplication between two level 1 ciphertexts.\\
+\vspace*{1mm}
+$\rightarrow$ $\mathbf{\mathsf{Add_2}}$: Addition between two level 2 ciphertexts.\\
+\vspace*{1mm}
+$\rightarrow$ $\mathbf{\mathsf{SMult_1}}$: Scalar multiplication over a single level 1 ciphertext.\\
+\vspace*{1mm}
+$\rightarrow$ $\mathbf{\mathsf{SMult_2}}$: Scalar multiplication over a single level 2 ciphertext.
+\end{itemize}
+\end{frame}
+
+
+%-------------------------------------------------------
+\begin{frame}[t]
+\frametitle{Boosting LHE scheme: Homomorphic properties $(\mathsf{Eval_{B}})$}
+
+\begin{block}{Boosted-LHE multiplication function, level 1 ($\mathsf{Mult_1}$)}
+\begin{itemize}
+\item Inputs are ciphertexts $ c_1=[u_1,\beta_1]$ and $c_2=[u_2,\beta_2]$ where $ u_1,u_2 \in \mathcal{M}$ and $ \beta_1,\beta_2 \in \widehat{C}$
+\item Compute $\alpha :=\mathsf{ \widehat{\mathsf{Enc}}}(u_1\cdot u_2) \boxplus(u_1 \boxdot \beta_2) \boxplus (u_2 \boxdot \beta_1)$
+\item Compute  $\beta := \left(\begin{array}{c} \beta_1 \\ \beta_2 \end{array} \right) \, 
+=\, \left(\begin{array}{cc} \beta_{11} & \beta_{12} \\ \beta_{21} & \beta_{22} \end{array} \right)$ 
+\item Output is the ciphertext $c=[\alpha,\beta]=\mathsf{Enc_B}(m_1\cdot m_2)$
+\end{itemize} 
+\end{block}
+\end{frame}
+
+%-------------------------------------------------------
+\begin{frame}[t]
+\frametitle{Correctness of $\mathsf{Mult_1}$}
+\begin{theorem}
+Assume that $m_1, m_2$ are messages from the message space $\mathcal{M}$ and $b_1,b_2$ are randomly picked numbers from $\mathcal{M}$. If $c_1=[u_1, \beta_1]=\mathsf{Enc_B}(m_1)$, $c_2=[u_2, \beta_2]=\mathsf{Enc_B}(m_2)$ and $c$ is the output of $\mathsf{Mult_1}(c_1,c_2)$, then one can decrypt $c$ and recover $m_1\cdot m_2$. 
+\end{theorem}
+\begin{proof}
+\begin{align*}
+c=\mathsf{Mult_1}(c_1,c_2)=[\alpha,\beta] \nonumber
+\end{align*}
+where
+\begin{align*}
+& \alpha :=\mathsf{ \widehat{\mathsf{Enc}}}(u_1\cdot u_2) \boxplus(u_1 \boxdot \beta_2) \boxplus (u_2 \boxdot \beta_1) \label{s: eqn10} \\
+ & \beta := \left(\begin{array}{c} \beta_1 \\ \beta_2 \end{array} \right) \, =\, \left(\begin{array}{cc} \beta_{11} & \beta_{12} \\ \beta_{21} & \beta_{22} \end{array} \right)
+\end{align*} 
+\end{proof}
+
+\end{frame}
+
+%-------------------------------------------------------
+\begin{frame}[t]
+\frametitle{Correctness of $\mathsf{Mult_1}$}
+\begin{proof}
+
+\begin{align*}
+\alpha&={\widehat{\mathsf{Enc}}}((m_1-b_1)\cdot(m_2-b_2)) \boxplus \,((m_1-b_1)\boxdot {\widehat{\mathsf{Enc}}}(b_2)
+)\\ &\boxplus \,((m_2-b_2) \boxdot {\widehat{\mathsf{Enc}}}(b_1))\\
+&={\widehat{\mathsf{Enc}}}((m_1-b_1)\cdot(m_2-b_2))\boxplus {\widehat{\mathsf{Enc}}}((m_1-b_1)\cdot b_2)\\& \boxplus {\widehat{\mathsf{Enc}}}((m_2-b_2) \cdot b_1))\\
+&=\mathsf{\widehat{\mathsf{Enc}}}((m_1-b_1)\cdot(m_2-b_2 )+((m_1-b_1 )\cdot b_2 )+((m_2-b_2 )\cdot b_1))\\
+&=\mathsf{\widehat{\mathsf{Enc}}}(m_1m_2-b_1m_2-b_2m_1+b_1b_2+m_1b_2-b_1b_2+m_2b_1-b_1b_2)\\
+&= {\widehat{\mathsf{Enc}}}(m_1 m_2-b_1 b_2)
+\end{align*}
+and
+\begin{align*}
+\beta=({\widehat{\mathsf{Enc}}}(b_1), {\widehat{\mathsf{Enc}}}(b_2))^T
+\end{align*}
+\end{proof}
+
+\end{frame}
+
+%-------------------------------------------------------
+\begin{frame}[t]
+\frametitle{Correctness of $\mathsf{Mult_1}$}
+\begin{proof}
+
+Hence, one can recover $m_1m_2$ as follows:
+\begin{align*}
+\widehat{\mathsf{Dec}}(\alpha)+\widehat{\mathsf{Dec}}(\beta_1)\cdot \widehat{\mathsf{Dec}}(\beta_2)&=\widehat{\mathsf{Dec}}(\alpha)+\widehat{\mathsf{Dec}}({\widehat{\mathsf{Enc}}}(b_1))\cdot \widehat{\mathsf{Dec}}({\widehat{\mathsf{Enc}}}(b_2)) \\
+&=(m_1 m_2-b_1 b_2)+ (b_1\cdot b_2) \nonumber \\
+&=m_1 m_2-b_1 b_2+b_1b_2 \nonumber\\
+&=m_1m_2 \nonumber
+\end{align*}
+\end{proof}
+\end{frame}
+
+%-------------------------------------------------------
+\begin{frame}[t]
+\frametitle{Boosting LHE scheme: Homomorphic properties $(\mathsf{Eval_{B}})$}
+
+\begin{block}{Boosted-LHE addition function, level 2 ($\mathsf{Add_2}$)}
+\begin{itemize}
+\item Inputs are ciphertexts $c_1=[\alpha_1,\beta_1]=\mathsf{Enc_B}(m_1)$ and $c_2=[\alpha_2,\beta_2]=\mathsf{Enc_B}(m_2)$ where $m_1,m_2 \in \mathcal{M}$; $\alpha_1, \alpha_2 \in \widehat{C},\, \beta_1 \in {\widehat{C}}^{2l_1}$ and $\beta_2 \in {\widehat{C}}^{2l_2}$; $\alpha_i=\widehat{\mathsf{Enc}}(m_i-b_i)$; $\beta_i:=  \left(\begin{array}{cccc} {\beta_{11}}^{(i)} & {\beta_{12}}^{(i)} & \cdots & {\beta_{1l_i}}^{(i)} \\ {\beta_{21}}^{(i)} & {\beta_{22}}^{(i)} & \cdots & {\beta_{2l_i}}^{(i)} \end{array} \right)$ where ${\beta_{1k}}^{(i)}=\widehat{\mathsf{Enc}}{(b_{1k}^{(i)})}$, also ${\beta_{2k}}^{(i)}=\widehat{\mathsf{Enc}}{(b_{2k}^{(i)})}$ for some $b_{1k}^{(i)},b_{2k}^{(i)} \in \mathcal{M}$ with $1 \leq k \leq  l_i$ and $\sum_{k=1}^{l_i}[{b_{1,k}}^{(i)} \cdot {b_{2,k}}^{(i)}]=b_i$
+\item Compute  $\alpha := \alpha_1 \boxplus \alpha_2 $ 
+\item Compute  $\beta :=(\beta_1 || \beta_2)=\left(\begin{array}{cccccccc} {\beta_{11}}^{(1)} & {\beta_{12}}^{(1)} & \cdots & {\beta_{1l_1}}^{(1)} & {\beta_{11}}^{(2)} & {\beta_{12}}^{(2)} & \cdots & {\beta_{1l_2}}^{(2)} \\ {\beta_{21}}^{(1)} & {\beta_{22}}^{(1)} & \cdots & {\beta_{2l_1}}^{(1)}   & {\beta_{21}}^{(2)} & {\beta_{22}}^{(2)} & \cdots & {\beta_{2l_2}}^{(2)} \end{array} \right)$
+\item Output is the ciphertext $c=[\alpha,\beta]= \mathsf{Enc_B}(m_1+m_2)$
+\end{itemize} 
+\end{block}
+\end{frame}
+%-------------------------------------------------------
+\begin{frame}[t]
+\frametitle{Boosted-LHE addition function, level 2 ($\mathsf{Add_2}$)}
+$\textbf{Example:}$ Inputs are ciphertexts $c_1=[\alpha_1,\beta_1]=\mathsf{Enc_B}(m_1)$ and $c_2=[\alpha_2,\beta_2]=\mathsf{Enc_B}(m_2)$ where $m_1,m_2 \in \mathcal{M}$; $\alpha_1, \alpha_2 \in \widehat{C},\, \beta_1 \in {\widehat{C}}^{2l_1}$ and $\beta_2 \in {\widehat{C}}^{2l_2}$; $\alpha_i=\widehat{\mathsf{Enc}}(m_i-b_i)$; \\
+\vspace*{1mm}
+Here $l_1=l_2=1$. $\beta_1 := \left(\begin{array}{c} \beta_{11} \\ \beta_{21} \end{array} \right)$ and $\beta_2 := \left(\begin{array}{c} \beta_{12} \\ \beta_{22} \end{array} \right)$ where each $\beta_{jk}=\widehat{\mathsf{Enc}}(b_{jk})$
+\begin{itemize}
+\item Compute  $\alpha := \alpha_1 \boxplus \alpha_2 $ 
+\item Compute  $\beta :=(\beta_1 || \beta_2)= \left(\begin{array}{cc} \beta_{11} & \beta_{12} \\ \beta_{21} & \beta_{22} \end{array} \right)$
+\item Output is the ciphertext $c=[\alpha,\beta]= \mathsf{Enc_B}(m_1+m_2)$
+\end{itemize}
+\end{frame}
+
+%-------------------------------------------------------
+\begin{frame}[t]
+\frametitle{Boosted-LHE addition function, level 2 ($\mathsf{Add_2}$)}
+Observe that
+\begin{align*}
+\alpha = \alpha_1 \boxplus \alpha_2 &={\widehat{\mathsf{Enc}}}((m_1-b_1)+(m_2-b_2)) \\
+&= {\widehat{\mathsf{Enc}}}((m_1+m_2)-(b_1+b_2))
+\end{align*}
+where $b_1+b_2=[{b_{11}}\cdot{b_{21}}]+[{b_{12}}\cdot {b_{22}}]$.\\
+\vspace*{2mm}
+Hence, one can recover $m_1+m_2$ as follows:
+\begin{align*}
+\widehat{\mathsf{Dec}}(\alpha)+ \sum_{k=1}^{l_1+l_2}[\widehat{\mathsf{Dec}}(\beta_{1k})&  \cdot \widehat{\mathsf{Dec}}(\beta_{2k})]= \widehat{\mathsf{Dec}}(\alpha)+[\widehat{\mathsf{Dec}}(\beta_{11})\cdot \widehat{\mathsf{Dec}}(\beta_{21})]\\&+[\widehat{\mathsf{Dec}}(\beta_{11})\cdot \widehat{\mathsf{Dec}}(\beta_{21})]\\&=((m_1+m_2)-(b_1+b_2))+[{b_{11}}\cdot{b_{21}}]+[{b_{12}}\cdot {b_{22}}]\\&=(m_1+m_2)-(b_1+b_2)+(b_1+b_2)\\&=m_1+m_2.
+\end{align*}
+\end{frame}
+
+%-------------------------------------------------------
+\begin{frame}
+\frametitle{Correctness of $\mathsf{Add_2}$}
+\begin{theorem}
+If $c_i=[\alpha_i,\beta_i]$ such that $\alpha_i=\widehat{\mathsf{Enc}}(m_i-b_i)$ for some $b_i \in \mathcal{M}$, $\beta_i:=  \left(\begin{array}{cccc} {\beta_{11}}^{(i)} & {\beta_{12}}^{(i)} & \cdots & {\beta_{1l_i}}^{(i)} \\ {\beta_{21}}^{(i)} & {\beta_{22}}^{(i)} & \cdots & {\beta_{2l_i}}^{(i)} \end{array} \right)$ where ${\beta_{1k}}^{(i)}=\widehat{\mathsf{Enc}}{(b_{1k}^{(i)})}$, also ${\beta_{2k}}^{(i)}=\widehat{\mathsf{Enc}}{(b_{2k}^{(i)})}$ for some $b_{1k}^{(i)},b_{2k}^{(i)} \in \mathcal{M}$ with $1 \leq k \leq  l_i$ and $\sum_{k=1}^{l_i}[{b_{1,k}}^{(i)} \cdot {b_{2,k}}^{(i)}]=b_i$, then $c$ can be computed (knowing $pk$) and given $c$, one can decrypt $c$ and recover $m_1+m_2$ (knowing $sk$).  
+\end{theorem}
+\begin{proof}
+\begin{align*}
+c=\mathsf{Add_2}(c_1,c_2)=[\alpha,\beta] \nonumber
+\end{align*}
+where
+ 
+\end{proof}
+
+\end{frame}
+
+%-------------------------------------------------------
+\begin{frame}
+\frametitle{Correctness of $\mathsf{Add_2}$}
+\begin{proof}
+\begin{align*}
+\alpha &:= \alpha_1 \boxplus \alpha_2 \nonumber \\
+\beta  &:=(\beta_1 || \beta_2)\nonumber\\ &=\left(\begin{array}{cccccccc} {\beta_{11}}^{(1)} & {\beta_{12}}^{(1)} & \cdots & {\beta_{1l_1}}^{(1)} & {\beta_{11}}^{(2)} & {\beta_{12}}^{(2)} & \cdots & {\beta_{1l_2}}^{(2)} \\ {\beta_{21}}^{(1)} & {\beta_{22}}^{(1)} & \cdots & {\beta_{2l_1}}^{(1)}   & {\beta_{21}}^{(2)} & {\beta_{22}}^{(2)} & \cdots & {\beta_{2l_2}}^{(2)} \end{array} \right)\nonumber
+\end{align*} 
+Observe that
+\begin{align*}
+\alpha &= \alpha_1 \boxplus \alpha_2 \\
+&={\widehat{\mathsf{Enc}}}((m_1-b_1)+(m_2-b_2)) \\
+&= {\widehat{\mathsf{Enc}}}((m_1+m_2)-(b_1+b_2))
+\end{align*}
+where $b_1+b_2=\sum_{k=1}^{l_1}[{b_{1,k}}^{(1)}.{b_{2,k}}^{(1)}]+\sum_{k=1}^{l_2}[{b_{1,k}}^{(2)}.{b_{2,k}}^{(2)}]$. 
+\end{proof}
+\end{frame}
+
+%-------------------------------------------------------
+\begin{frame}
+\frametitle{Correctness of $\mathsf{Add_2}$}
+\begin{proof}
+
+Hence, one can recover $m_1+m_2$ as follows:
+\begin{align*}
+& \widehat{\mathsf{Dec}}(\alpha)+ \sum_{k=1}^{l_1+l_2}[\widehat{\mathsf{Dec}}(\beta_{1k})\cdot \widehat{\mathsf{Dec}}(\beta_{2k})]\nonumber \\& =\widehat{\mathsf{Dec}}(\alpha)+\sum_{k=1}^{l_1}[\widehat{\mathsf{Dec}}({\beta_{1k}}^{(1)})\cdot \widehat{\mathsf{Dec}}({\beta_{2k}}^{(1)})]+\sum_{k=1}^{l_2}[\widehat{\mathsf{Dec}}({\beta_{1k}}^{(2)})\cdot \widehat{\mathsf{Dec}}({\beta_{2k}}^{(2)})]\nonumber \\
+&= ((m_1+m_2)-(b_1+b_2))+\sum_{k=1}^{l_1}[{b_{1,k}}^{(1)}.{b_{2,k}}^{(1)}]+\sum_{k=1}^{l_2}[{b_{1,k}}^{(2)}.{b_{2,k}}^{(2)}]\nonumber\\ 
+&= ((m_1+m_2)-(b_1+b_2))+b_1+b_2 \nonumber \\
+&= m_1+m_2 \nonumber
+\end{align*}
+\end{proof}
+\end{frame}
+
+%-------------------------------------------------------
+\begin{frame}[t]
+\frametitle{Boosting LHE encryption scheme: Construction}
+$\textbf{Decryption functions for the Boosted-LHE scheme}$ $(\mathsf{Dec_B})$
+
+\begin{block}{Boosted-LHE Decryption Level 1($\mathsf{Dec1}$)}
+\begin{itemize}
+\item Inputs are ciphertext $c$, secret key $sk=a$
+\item Compute  $m := u+\widehat{\mathsf{Dec}}(\beta)$
+\item Output the message $m$
+\end{itemize} 
+\end{block}
+\vspace*{3mm}
+\begin{block}{Boosted-LHE Decryption Level 2($\mathsf{Dec2}$)}
+\begin{itemize}
+\item Inputs are ciphertext $c$, secret key $sk=a$
+\item Compute  $m := \widehat{\mathsf{Dec}}(\alpha)+\sum_{i=1}^l( \widehat{\mathsf{Dec}}(\beta_{1i} ). \widehat{\mathsf{Dec}}(\beta_{2i} ))$
+\item Output the message $m$
+\end{itemize} 
+\end{block}
+\end{frame}
+
+%-------------------------------------------------------
+\begin{frame}[t]
+\frametitle{Correctness of $\mathsf{Dec2}$}
+\begin{theorem}
+If a level 2 ciphertext $c=[\alpha,\beta] \in C$ is an encryption of $m \in \mathcal{M}$, then $\mathsf{Dec2}(c)=m$.
+\end{theorem}
+\begin{proof}
+\begin{align*}
+\mathsf{Dec2}([\widehat{\mathsf{Enc}}(m-b), \left(\begin{array}{cccc} {\beta_{11}} & {\beta_{12}} & \cdots & {\beta_{1l}} \\ {\beta_{21}} & {\beta_{22}} & \cdots & {\beta_{2l}} \end{array} \right)])\nonumber
+\end{align*}
+where for each $\beta_{ik}=\widehat{\mathsf{Enc}}(b_{ik})$
+\begin{align*}
+\widehat{\mathsf{Dec}}(\alpha)&+\sum_{i=1}^l[ \widehat{\mathsf{Dec}}(\beta_{1i} ). \widehat{\mathsf{Dec}}(\beta_{2i} )]\nonumber\\ 
+\end{align*}
+\end{proof}
+\end{frame}
+
+%-------------------------------------------------------
+\begin{frame}[t]
+\frametitle{Correctness of $\mathsf{Dec2}$}
+\begin{proof}
+\begin{align*}
+&= m-b+\sum_{i=1}^l [\widehat{\mathsf{Dec}}(\widehat{\mathsf{Enc}}(b_{1i}) ). \widehat{\mathsf{Dec}}(\widehat{\mathsf{Enc}}(b_{2i} ))]\nonumber\\
+&= m-b+\sum_{i=1}^l [b_{1i} \cdot  b_{2i}]\nonumber
+\end{align*}
+which finally yields $m-b+b$ and thus $m$. Hence we have, $\mathsf{Dec2}(c)=m$.
+\end{proof}
+
+\end{frame}
+%-------------------------------------------------------
+
+\begin{frame}[t]
+\frametitle{Security of Boosted-LHE scheme}
+
+\begin{itemize}
+\item  Semantic security of $\mathsf{HE_B}$ depends on the semantic security of the scheme $\mathsf{\widehat{HE}}$.
+\vspace*{4mm}
+\item If $\mathsf{\widehat{HE}}$ is circuit private, then $\mathsf{HE_B}$ is also a leveled circuit private homomorphic encryption.
+
+\end{itemize}
+
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}[t]
+\frametitle{Efficiency of Boosted-LHE scheme}
+
+\begin{table}
+\centering
+\caption{$\textbf{Efficiency of Boosted-LHE Encryption Scheme}$}\label{table:Eff. B-LHE}
+\begin{tabular}{ |p{3cm}||p{8cm}|  }
+ \hline
+ \hline
+ Functions & Operations\\
+ \hline\hline
+ B-LHE Key generation       & same as underlying LHE \\
+ \hline
+ B-LHE Encryption            & 1PRNG + 1S+ 1 LHE encryption \\
+ \hline
+ B-LHE Decryption            & 1A + 1 LHE decryption (for $\mathsf{Dec1}$) and $(2l+1)$ LHE decryption + $l$ M+ $l$ A (for $\mathsf{Dec2}$) \\
+ \hline
+ B-LHE $\mathsf{Add_1}$            & 1A + 1 LHE A \\
+ \hline
+ B-LHE $\mathsf{Mult_1}$      & 1M+ 2 LHE SM + 2 LHE A + 1 LHE encryption \\
+ \hline
+ B-LHE $\mathsf{Add_2}$           & 1 LHE A  \\
+ \hline
+ B-LHE $\mathsf{SMult_1}$   & 1M+ 2 LHE SM\\
+  \hline
+  B-LHE $\mathsf{SMult_2}$    & $(l+ 1)$ LHE SM \\
+  \hline
+\end{tabular}
+\end{table}
+\end{frame}
+
+%-------------------------------------------------------
+
+\begin{frame}[t]
+\frametitle{Concluding remarks:}
+
+\begin{itemize}
+\item  We studied public key homomorphic encryption schemes: RSA, ElGamal, CGS.
+\vspace*{3mm}
+\item We studied a boosting technique for linearly homomorphic encryption schemes.
+\vspace*{3mm}
+\item We have full proofs of correctness.
+\vspace*{3mm}
+\item We implemented this boosting technique on the CGS scheme.
+\vspace*{3mm}
+\item We provided MAGMA source codes for CGS scheme and Boosted-CGS schemes.
+\end{itemize}
+\end{frame}
+%-------------------------------------------------------
+
+\begin{frame}[t]
+\frametitle{Future works:}
+
+\begin{itemize}
+\item Fully homomorphic enryption scheme, Gentry, in 2009. \\
+\vspace*{2mm}
+\item Full implementations: \\
+\vspace*{2mm}
+$\rightarrow$ to allow arbitrary multiplications.\\
+\vspace*{2mm}
+$\rightarrow$ to allow arbitrary additions on higher degree polynomials.
+\vspace*{3mm}
+\item Boosting multiplicative homomorphic schemes to allow additions.
+
+\end{itemize}
+\end{frame}
+%------------------------------------------------
+
+%------------------------------------------------
+
+
+\begin{frame}[t]
+\frametitle{References}
+\footnotesize{
+\begin{thebibliography}{99} % Beamer does not support BibTeX so references must be inserted manually as below
+\bibitem[CGS, 1997]{p1} Ronald Cramer, Rosario Gennaro and Berry Schoenmakers (1997)
+\newblock A secure and Optimally Efficient Multi-authority election Scheme
+\newblock \emph{EUROCRYPT, Lecture notes in Computer Science, Springer-Verlag} 1233, 103--118.
+\vspace*{3mm}
+\bibitem[Catalano]{p1} Dario Catalano and Dario Fiore
+\newblock Boosting Linearly-Homomorphic Encryption to Evaluate Degree-2 Functions on Encrypted Data
+%\newblock \emph{Journal Name} 12(3), 45 --//// 678.
+\end{thebibliography}
+}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\Huge{\centerline{Thank you}}
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}
+\Huge{\centerline{Questions?}}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\end{document} 
