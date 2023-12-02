@@ -1,0 +1,526 @@
+﻿
+// Partially Linearly Homomorphic Encryption (CGS), HE_cgs=(KeyGen_cgs , Enc_cgs , Dec_cgs , Eval_cgs) //
+//KEY GENERATION FUNCTION//
+// Input of this function is a security parameter n
+//Output of this function is (p, q, g, a, G)
+// a is the secret key
+//g, p and q are Domain(system) parameters, common.
+// G is the public key.
+
+
+
+SetSeed(1);
+ 
+KeyGen_cgs:= function(n)
+  while true do
+      i:=Random(2^(n-1),2^n);
+      if IsPrime(i: Proof:=false) then
+        q:=i;                              //q is a randomly picked n-bit prime;  
+  
+        if IsPrime(2*q+1: Proof:=false) then
+          p:=2*q+1;                         // p is a prime
+          a:=Random(1,q-1);                 // a  is a randomly picked number in Zq^*
+          break;
+        end if;
+      end if;
+        
+   end while;
+
+  Zp:=GF(p);
+  
+// g is the generator of the subgroup G_q≤Z_p^*; 
+//if g^a≠1,   g is replaced by g^2
+
+  for i in Zp do
+   if i ne 0 then 
+    if i^2 ne 1 then
+      if i ne 1 then
+        if i^a ne 1 then
+           g:=i^2;
+           G:=g^a;
+           break i;
+        end if;
+      end if;
+    end if;
+   end if;
+  end for;
+
+
+  return p,q,g,a,G;
+end function;
+
+
+
+// ENCRYPTION FUNCTION FOR THE CGS (Enc_cgs)//
+// Input to this function is a pair (Pk,m)
+// m in M, M is the message space [-B,B]. (in our case B=10000)
+//Pk is the public key, Pk=G
+//g and q are Domain(system) parameters, common.
+
+// Output of this function is a cipher text C
+//C ∈C ̃ ; C ̃ is a cipher text space (i.e. CGS cipher text space)
+// C is a sequence of two group elements; C=[x,y]
+
+
+Enc_cgs:= function(m,g,q,G)
+
+r:=Random(1,q);   //r  is a randomly picked number.
+x:=g^r;
+y:=((G)^r)*(G^m);
+  return [x,y];
+end function;
+
+
+
+// DECRYPTION FUNCTION FOR THE CGS (Dec_cgs) //
+// Input to this function is a pair (sk,C)
+//C ∈C ̃ ; C ̃ is a cipher text space (i.e. CGS cipher text space).
+// C is a sequence of two group elements; C= [x, y]; x,y in Z_p.
+//sk is the secret key, sk=a.
+//p is Domain(system) parameter, common.
+//G is public key.
+
+// Output of this function is the message m
+
+
+Dec_cgs:=function(C,G,a,p)
+Zp:=GF(p);
+
+x:=C[1];   // x in Z_p
+y:=C[2];   // y in Z_p
+K1:=(Zp!x)^a;
+K2:=(Zp!y)/K1;
+
+// Check if for any i in M, G^i=K2  then i=m
+
+for i in [-10000..10000] do
+   //  printf "i= %o\n",i; 
+  if G^i eq K2 then 
+      return i;
+     end if;
+end for;
+return "error";
+end function; 
+
+// The security parameter is n=201
+p,q,g,a,G:=KeyGen_cgs(201);
+
+
+
+
+// EVALUATION FUNCTIONS FOR THE CGS (Eval_cgs) //
+
+// ADDITION FUNCTION IN CGS  //
+// Input to this function is a pair (C1,C2)
+// C1,C2∈C ̃ ; C ̃ is a cipher text space (i.e. CGS cipher text space), C1=Enc_cgs(m1)=[x1,y1], C2=Enc_cgs(m2)=[x2,y2].
+//g, p, G are Domain(system) parameters, common.
+
+// Output of this function is a cipher text C1+C2
+// C1+C2∈C ̃ ; C ̃ is a cipher text space (i.e. CGS cipher text space)
+// C1+C2 is a sequence of two group elements; C=[x,y]
+
+
+EncryptedAdd:= function(C1,C2,g,p,G);
+
+ x1:=C1[1];y1:=C1[2];
+ x2:=C2[1];y2:=C2[2];
+ 
+ x:=x1*x2;
+ y:=y1*y2; 
+ return [x,y];
+end function;
+
+//Correctness: (Enc_cgs(m1),Enc_cgs(m2),g,q,G) maps to (Enc_cgs(m1+m2))
+
+//(Enc_cgs(m1)+Enc_cgs(m2))=([x1,y1]+[x2,y2])
+//=[x1*x2,y1*y2]
+//=[*g^(r2),G^(r1).G^(m1)*G^(r2).G^(m2)]
+//=[g^(r1).g^(r2),G^(r1).G^(r2).G^(m1).G^(m2)]
+//=[g^(r1+r2),G^(r1+r2 ).G^(m1+m2)]
+//=[g^(r^'),G^(r^').G^(m1+m2)]   ;   where r^'=r1+r2 
+//=Enc_cgs(m1+m2)
+
+
+
+// SCALAR MULTIPLICATION FUNCTION IN CGS  //
+
+// Input to this function is a pair (s,C1)
+//s is a scalar, s in M.
+// C1∈C ̃ ; C ̃ is a cipher text space (i.e. CGS cipher text space), C1=Enc_cgs(m1)=[x1,y1].
+//g, p, G are Domain(system) parameters, common.
+
+// Output of this function is a cipher text s.C1
+// s.C1  ∈C ̃ ; C ̃ is a cipher text space (i.e. CGS cipher text space)
+// s.C1 is a sequence of two group elements; C=[x,y]
+
+EncryptedSMult:= function(s,C1,g,p,G);
+
+x1:=C1[1];y1:=C1[2];
+ x:=x1^s;
+ y:=y1^s; 
+ return [x,y];
+end function;
+
+
+//Correctness: (s,Enc_cgs(m1)),g,q,G) maps to Enc_cgs(s.m1)
+//(s*Enc_cgs(m1)) =s*[ x1,y1 ]=[ s*x1,s*y1]
+//=[s*g^(r1),s*G^(r1).G^(m1)]
+//=[g^(r1.s),G^(r1.s).G^(m1.s)]
+//=[g^(r^'),G^(r^').G^(s.m1)]  ; where r^'=r1.s 
+//=Enc_cgs(s.m1)
+
+
+
+
+// LINEAR COMBINATION FUNCTION (ADDITION AND SCALAR MULTIPLICATION) IN CGS //
+ 
+// Input to this function is a pair of sets (s,C)
+//s=[s1,s2,…];  si's are a scalar, s in M.
+// C=[C1,C2,….]; Ci^' s are cipher texts, Ci∈C ̃ ; C ̃ is a cipher text space (i.e. CGS cipher text space), Ci=Enc_cgs(mi)=[xi,yi].
+//g, p, G are Domain(system) parameters, common.
+
+// Output of this function is a cipher text C=∑si.Ci 
+//C=∑si.Ci ∈C ̃ ; C ̃ is a cipher text space (i.e. CGS cipher text space)
+// C=∑si.Ci  is a sequence of two group elements; C=[x,y]
+
+
+EncryptedAddSMultGeneral:= function(S,C,g,p,G);
+ k:=#S;
+ 
+ x:=1;
+ y:=1;
+ for i:=1 to k do
+ x[i]:=C[i][1];  y[i]:=C[i][2];
+   x:=x*(x[i])^S[i];
+   y:=y*(y[i])^S[i];
+ end for;
+ return [x,y];
+end function;
+
+
+
+//Correctness: (s1,s2,…sk,Enc_cgs(m1),Enc_cgs(m2),….Enc_cgs(mk),g,q,G) maps to Enc_cgs(s1.m1+s2.m2+....+sk.mk)
+
+//  s1*Enc_cgs(m1)+s2*Enc_cgs(m2)+......+sk*Enc_cgs(mk)
+//= s1*[x1,y1]+s2*[x2,y2]+....+sk*[xk,yk]
+//=([s1*x1,s1*y1]+[s2*x2,s2*y2]+.....+[sk*xk,sk*yk])
+//=(s1*g^(r1),s2*g^(r2),.....sk*g^(rk),s1*G^(r1).G^(m1),s2*G^(r2).G^(m2),....sk*G^(rk).G^(mk))
+//=(g^(r1.s1),g^(r2.s2),....g^(rk.sk),G^(r1.s1).G^(m1.s1),G^(r2.s2).G^(m2.s2),....G^(rk.sk).G^(mk.sk))
+//=(g^(r1.s1+r2.s2+....+rk.sk),G^(r1.s1+r2.s2+....+rk.sk).G^(m1.s1+m2.s2+....+mk.sk))
+//=(g^(r^'),G^(r^').G^(m1.s1+m2.s2+.....+mk.sk));where r^'=r1.s1+r2.s2+.....+rk.sk 
+//= Enc_cgs(s1.m1+s2.m2+....+sk.mk)
+
+
+
+
+
+
+//BOOSTING LINEARLY HOMOMORPHIC ENCRYPTION (LHE) FOR MULTIPLICATION, HE=(KEYGEN, ENC, DEC, EVAL) //
+
+//KEY GENERATION FUNCTION FOR THE BOOSTED-CGS //
+
+// Same as CGS key generation i.e. KEYGEN=KeyGen_cgs
+// Input to this function is a 1^n
+// n is the security parameter. 
+// Output of this function is a pair (Pk, sk)
+// Pk=public key G; sk=secret key a; 
+// g, p and q are Domain(system) parameters, common;
+// Message spaces are same for both the encryption scheme, i. e. M(ENC)=M(Enc_cgs)
+
+
+
+// ENCRYPTION FUNCTION FOR THE BOOSTED-CGS  (ENC) //
+
+// Input to this function is a pair (Pk,m)
+// Pk is the public key (g, q, G)
+// Output of this function is a cipher text C
+// C ∈MXC ̃ where M is a message space and C ̃ is a cipher text space (i.e. CGS cipher text space)
+// C=u,β;u∈M;β∈C ̃
+
+ENC:= function(m,g,q,G)
+
+b:=Random(m-50,m+50);     // b is randomly chosen by randomized encryption algorithm from message space M
+printf "m=%o, b=%o \n", m, b;
+u:=m-b;                  // m-b in M gives m-B≤b≤m+B
+beta:=Enc_cgs(b,g,q,G);
+ return u,beta;
+end function;
+
+
+
+
+// DECRYPTION FUNCTION FOR THE BOOSTED-CGS (DEC) ///
+
+//LEVEL-1 DECRYPTION FUNCTION  (DEC_1)//
+
+// Input to this function is a pair (sk,C)
+// sk is the secret key
+//C ∈MXC ̃ where M is a message space and C ̃ is a cipher text space (i.e. CGS cipher text space)
+//C=u,β;u∈M;β∈C ̃
+// Output of this function is the message m in M
+
+//Decryption of Add_1,Smult_1
+
+DEC_1:=function(u,beta,G,a,p)
+m:=u+Dec_cgs(beta,G,a,p);
+ return m;
+end function;
+
+
+
+//LEVEL-2 DECRYPTION FUNCTION (DEC_2)//
+
+// Input to this function is a pair (sk,C)
+// sk is the secret key
+//C∈ C ̃XC ̃ ^(2l) where C ̃ is a cipher text space (i.e. CGS cipher text space)
+// C=α,β;α∈C ̃;β∈C ̃  ^(2l) ; β =( (β_11 β_21 )^T  (β_12 β_22)^T........ (β_1l  β_2l )^T);
+// Output of this function is the message m in M
+
+
+// Decryption of Mult_1
+
+DEC_2:= function(alpha,beta,G,a,p)
+x:=beta[1];
+y:=beta[2];
+m:=Dec_cgs(alpha,G,a,p)+(Dec_cgs(x,G,a,p)*Dec_cgs(y,G,a,p));
+ return m;
+end function;
+
+// Decryption of ADD_2
+
+
+DEC_3:= function(alpha,beta,G,a,p)
+//for i in {1,2,3,4} do
+//x[i]:=beta[1][i];
+//y[i]:=beta[2][i];
+x1:=beta[1][1];x2:=beta[1][2];x3:=beta[1][3];x4:=beta[1][4];
+y1:=beta[2][1];y2:=beta[2][2];y3:=beta[2][3];y4:=beta[2][4];
+x:=[x1,x2];
+y:=[x3,x4];
+z:=[y1,y2];
+w:=[y3,y4];
+
+//sum:=Decryption(x[i],G,a,p)*Decryption(y[i],G,a,p)
+m:=Dec_cgs(alpha,G,a,p)+(Dec_cgs(x,G,a,p)*Dec_cgs(z,G,a,p)+Dec_cgs(y,G,a,p)*Dec_cgs(w,G,a,p));
+return m;
+end function;
+
+
+// Decryption of Smult_2
+
+DEC_4:= function(alpha,beta,G,a,p)
+
+x1:=beta[1][1];x2:=beta[1][2];
+y1:=beta[2][1];y2:=beta[2][2];
+x:=[x1,x2];
+y:=[y1,y2];
+m:=Dec_cgs(alpha,G,a,p)+(Dec_cgs(x,G,a,p)*Dec_cgs(y,G,a,p));
+ return m;
+end function;
+
+
+
+//Evaluation functions (EVAL)
+
+
+//ADDITION IN THE BOOSTED-CGS LEVEL 1 (Add_1)  //
+
+// Input to this function is a pair (C_1,C_2)
+// C_1,C_2 is a level-1 ciphertext.
+// C_1,C_2 ∈MXC ̃ where M is a message space and C ̃ is a cipher text space (i.e. CGS cipher text space)
+// C_1=u_1, β_1;  C_2=u_2, β_2;  u_1,u_2∈M;  β_1, β_2∈C ̃  ; β_1=[β_11,β_12 ];  β_2=[β_21,β_22 ];   
+
+// Output of this function is a level-1 cipher text u,β,u∈M,β∈C ̃
+
+Add_1:= function(u1,beta1,u2,beta2,g,p,G);
+ u:=u1+u2;
+ beta:=[beta1[1]*beta2[1],beta1[2]*beta2[2]]; 
+ return u,beta;
+end function;
+
+
+//Correctness:
+// u_1=m_1-b_1; u_2=m_2-b_2; b_1 in M; b_2 in M;
+//β_1:=Enc_cgs(Pk,b_1);  β_2:= Enc_cgs(Pk,b_2); 
+//u=u_1+u_2=m_1-b_1+m_2-b_2=(m_1+m_2)-(b_1+b_2);
+//β in Enc_cgs(Pk,b_1+b_2);
+
+
+
+
+
+
+//MULTIPLICATION IN THE BOOSTED-CGS LEVEL 1  (Mult_1) //
+
+// Input to this function is a pair (C_1,C_2)
+//C_1,C_2 is a level-1 ciphertext.
+//C_1,C_2 ∈MXC ̃ where M is a message space and C ̃ is a cipher text space (i.e. CGS cipher text space)
+// C_1=u_1,β_1; C_2=u_2,β_2;  u_1,u_2∈M; β_1,β_2∈C ̃  ; β_1=[β_11,β_12 ]; β_2=[β_21,β_22 ];   
+
+// Output of this function is a level-2 cipher text α,β,α∈C ̃,β∈C ̃^2
+
+
+Mult_1:= function(u1,beta1,u2,beta2,g,p,G);
+ u:=Enc_cgs(u1*u2,g,q,G);
+ b:=[beta2[1]^u1,beta2[2]^u1];
+ c:=[beta1[1]^u2,beta1[2]^u2];
+ alpha:=EncryptedAdd(EncryptedAdd(u,b,g,p,G),c,g,p,G);
+ beta:=Matrix(IntegerRing(),2,2,[beta1[1],beta1[2],beta2[1],beta2[2]]); 
+ return alpha,beta;
+end function;
+
+
+//Correctness:
+// u_1=m_1-b_1; u_2=m_2-b_2; b_1 in M; b_2 in M;
+// β_1=Enc_cgs(Pk,b_1);  β_2=Enc_cgs(Pk,b_2); 
+//α in EncryptedAdd(Enc_cgs(Pk,u_1*u_2),EncryptedSMult(u_1,β_2),EncryptedSMult(u_2,β_1)) 
+//=EncryptedAdd(Enc_cgs(Pk,(m_1-b_1)*(m_2-b_2)),EncryptedSMult(((m_1-b_1),Enc_cgs(Pk,b_2))),EncryptedSMult(((m_2-b_2),Enc_cgs(Pk,b_1))))
+//=Enc_cgs(Pk,(m_1-b_1 ).(m_2-b_2 )+((m_1-b_1 ).b_2 )+((m_2-b_2 ).b_1))
+//=Enc_cgs(Pk,(m_1 m_2-b_1 b_2 ))
+//β in (Enc_cgs(Pk,b_1 ), Enc_cgs(Pk,b_2 ))^T;
+
+
+
+//ADDITION IN THE BOOSTED-CGS LEVEL 2 (ADD_2) //
+// Input to this function is a pair (C_1,C_2)
+//C_1,C_2 are a level-2 ciphertexts.
+//C_1 ∈C ̃XC ̃^(2l_1 ) , C_2 ∈C ̃XC ̃^(2l_2 ) where C ̃ is a cipher text space (i.e. CGS cipher text space)
+// C_1=α_1, β_1;C_2=α_2, β_2;α_1,α_2∈C ̃; β_1∈C ̃^(2Xl_1 ), β_2∈C ̃^(2l_2 )  ; β_1=( (β_11^(1),β_21^(1))^T.... (β_12^(1),β_22^(1))^T.....β_(1l_1)^(1),β_(2l_1)^(1))^T)
+//β_2=((β_11^(2),β_21^(2))^T, (β_12^(2),β_22^(2))^T,....,(β_(1l_2)^(2),β_(2l_2)^(2))^T);   
+
+// Output of this function is a level-2 cipher text α,β;   where α∈C ̃,β∈C ̃^(2(l_1+l_2))
+
+
+Add_2:= function(alpha1,beta1,alpha2,beta2,g,p,G);
+ 
+ alpha:=EncryptedAdd(alpha1,alpha2,g,p,G);
+ beta:=Matrix(IntegerRing(),2,4,[beta1[1][1],beta1[1][2],beta2[1][1],beta2[1][2],beta1[2][1],beta1[2][2],beta2[2][1],beta2[2][2]]); 
+ return alpha,beta;
+end function;
+
+
+
+//Correctness:
+// α_1 in Enc_cgs(Pk,m_1-b_1); α_2 in Enc_cgs(Pk, m_2-b_2);  b_1 in M; b_2 in M;
+// β_1  is a matrix of (β_(j,k)^(1) in Enc_cgs(Pk,b_(j,k)^(1))_(j,k)  such that ∑_(k=1)^(l_1)[b_(1,k)^(1).b_(2,k)^(1)]=b_1
+// i.e.  β_1=( (β_11^(1),β_21^(1))^T.... (β_12^(1),β_22^(1))^T.....β_(1l_1)^(1),β_(2l_1)^(1))^T)   from   ((b_11^(1),b_21^(1))^T.... (b_12^(1),b_22^(1))^T.....(b_(1l_1)^(1),b_(2l_1)^(1))^T  and so b_1,1^(1).b_2,1^(1)+b_1,2^(1).b_2,2^(1)+....+b_(1,l_1)^(1).b_(2,l_1)^(1))=b_1 .
+// β_2  is a matrix of (β_(j,k)^(2) in Enc_cgs(Pk,b_(j,k)^(2))_(j,k)  such that ∑_(k=1)^(l_2)[b_(1,k)^(2).b_(2,k)^(2)]=b_2
+// i.e.  β_2=( (β_11^(2),β_21^(2))^T.... (β_12^(2),β_22^(2))^T.....β_(1l_1)^(2),β_(2l_1)^(2))^T)   from   ((b_11^(2),b_21^(2))^T.... (b_12^(2),b_22^(2))^T.....(b_(1l_1)^(2),b_(2l_1)^(2))^T  and so b_1,1^(2).b_2,1^(2)+b_1,2^(2).b_2,2^(2)+....+b_(1,l_1)^(2).b_(2,l_1)^(2))=b_2.
+//α in Enc_cgs(Pk,a_1+a_2)  
+//=Enc_cgs(Pk,(m_1-b_1)+(m_2-b_2))
+//=Enc_cgs(Pk,(m_1+m_2)-(b_1+b_2))
+//β is a matrix of β_(j,k)in Enc_cgs(Pk,b_(j,k))_(j,k)  such that ∑_(k=1)^(l_1+l_2)[b_(1,k).b_(2,k)]=(b_1,1)^(1).(b_2,1)^(1)+(b_1,2)^(1).(b_2,2)^(1)+....+(b_(1,l_1))^(1).(b_(2,l_1))^(1)+(b_1,1)^(2).(b_2,1)^(2)+(b_1,2)^(2).(b_2,2)^(2)+...+(b_(1,l_2))^(2).(b_(2,l_2))^(2)=b_1+b_2.
+
+
+
+//SCALAR MULTIPLICATION IN THE BOOSTED-CGS LEVEL 1 (Cmult_1)  //
+// Input to this function is a pair (c,C)
+// c ϵ M is a scalar, where M is a message space
+//C is a level-1 ciphertext
+//C ∈MXC ̃ where C ̃ is a cipher text space (i.e. CGS cipher text space)
+// C=u,β;u∈M,β∈C ̃  ,β=[β_1,β_2]   
+
+// Output of this function is a level-1 cipher text u1,β1,u1∈M,β1∈C ̃
+
+
+
+CMult_1:= function(c,u,beta,g,p,G);
+ u1:=u*c;
+ beta1:=EncryptedSMult(c,beta,g,p,G);         //[beta[1]^c,beta[2]^c];  
+ return u1,beta1;
+end function;
+
+
+//Correctness:
+// a=m-b;  b in M;
+//β in Enc_cgs(Pk,b);
+//u1=c*u=c(m-b)=cm-cb;
+//β1 in Enc_cgs(Pk,cb);
+
+
+
+
+//SCALAR MULTIPLICATION IN THE BOOSTED-CGS LEVEL 2 (CMult_2)  ///
+// Input to this function is a pair (c,C)
+// c ϵ M is a scalar, where M is a message space
+//C is a level-2 ciphertext
+// C∈C ̃XC ̃^(2l) , where C ̃ is a cipher text space (i.e. CGS cipher text space)
+// C=α,β;α∈C ̃;β∈C ̃^(2l); β =((β_11,β_21)^T  (β_12,β_22)^T.....(β_1l,β_2l)^T),where C ̃ is a cipher text space (i.e. CGS cipher text space)
+// Output of this function is a level-1 cipher text α1,β1,α1∈C ̃,β1∈C ̃^(2l)
+
+
+
+CMult_2:= function(c,alpha,beta,g,p,G);
+ alpha1:=EncryptedSMult(c,alpha,g,p,G);
+ beta1:=Matrix(IntegerRing(),2,2,[(beta[1][1])^c,(beta[1][2])^c,beta[2][1],beta[2][2]]); 
+ return alpha1,beta1;
+end function;
+
+
+//Correctness:
+// α in Enc_cgs(Pk,m-b); b in M;
+//β is a matrix of (β_(j,k) in Enc_cgs(Pk,b_(j,k))_(j,k)  such that ∑_(k=1)^l=[b_(1,k).b_(2,k)]=b_(1,1).b_(2,1)+b_(1,2).b_(2,2)+...+b_(1,l).b_(2,l)=b;
+// α1 in Enc_cgs(Pk,c.(m-b))=Enc_cgs(Pk,cm-cb);
+//β1 is a matrix of (β_(j,k)' in Enc_cgs(Pk,b_(j,k))_(j,k) such that β_(1,k)' in Enc_cgs(Pk,cb_(1,k)),β_(2,k)' in Enc_cgs(Pk,b_(2,k)).  β'=((EncryptedSMult(c,β_11), β_21)^T ,(EncryptedSMult(c,β_12),β_22)^T ......(EncryptedSMult(c,β_1l), β_2l)^T)  from ((EncryptedSMult(c,b_11), b_21)^T ,(EncryptedSMult(c,b_12),b_22)^T ......(EncryptedSMult(c,b_1l), b_2l)^T).
+// and so ∑_(k=1)^l[cb_(1,k).b_(2,k)]=cb_(1,1).b_(2,1)+cb_(1,2).b_(2,2)+.....+cb_(1,l).b_(2,l)=cb;
+
+
+
+
+
+//////////
+
+
+
+s:=3;
+m1:=17;
+m2:=19;
+m3:=6;
+u1, beta1:=ENC(m1,g,p,G);
+u2, beta2:=ENC(m2,g,p,G);
+u3, beta3:=ENC(m3,g,p,G);
+
+p1:=DEC_1(u1, beta1,G,a,p);
+p2:=DEC_1(u2, beta2,G,a,p);
+p3:=DEC_1(u3, beta3,G,a,p);
+
+//Addition in level 1 (of m1 and m2)  //
+Add1c1, Add1c2:=Add_1(u1, beta1,u2, beta2,g,p,G);
+Add1p:=DEC_1(Add1c1,Add1c2,G,a,p);
+
+printf "m1+m2 is equal to Add1p: %o\n",m1+m2 eq Add1p;
+
+//multiplication in level 1 (of m1 and m2)=Y //
+Multc1,Multc2:=Mult_1(u1, beta1,u2, beta2,g,p,G);
+Mult1p:=DEC_2(Multc1,Multc2,G,a,p);
+
+printf "m1*m2 is equal to BMult: %o\n",m1*m2 eq Mult1p;
+
+
+//multiplication in level 1 (of m1 and m3)=Z  //
+Multnc1,Multnc2:=Mult_1(u1, beta1,u3, beta3,g,p,G);
+Multn1p:=DEC_2(Multnc1,Multnc2,G,a,p);
+
+printf "m1*m3 is equal to Multn1p: %o\n",m1*m3 eq Multn1p;
+
+
+// Addition in level 2 (of m1*m2 and m1*m3 ) //
+Add2c1, Add2c2:=Add_2(Multc1,Multc2,Multnc1,Multnc2,g,p,G);
+Add2p:=DEC_3(Add2c1, Add2c2,G,a,p);
+
+printf "m1*m2+m1*m3 is equal to Add2p: %o\n",m1*m2+m1*m3 eq Add2p;
+
+
+// Scalar multiplication in level 1 (of s and m1) //
+Smult1c1,Smult1c2:=CMult_1(s,u1, beta1,g,p,G);
+Smult1p1:=DEC_1(Smult1c1,Smult1c2,G,a,p);
+
+printf "s*m1 is equal to Smult1p1 : %o\n",s*m1 eq Smult1p1;
+
+
+
+// Scalar multiplication in level 1 (of s and m1*m2) //
+Smult2c1,Smult2c2:=CMult_2(s,Multc1,Multc2,g,p,G);
+Smult1p2:=DEC_2(Smult2c1,Smult2c2,G,a,p);
+
+printf "s*(m1*m2) is equal to Smult1p2: %o\n",s*(m1*m2) eq Smult1p2;
